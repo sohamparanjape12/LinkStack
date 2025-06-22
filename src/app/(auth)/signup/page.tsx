@@ -6,11 +6,11 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Aurora } from '@/components/aurora'
 import { useTheme } from 'next-themes'
+import Link from 'next/link'
 
 export default function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [username, setUsername] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
 
@@ -19,7 +19,7 @@ export default function SignupPage() {
     setLoading(true)
     setMessage('')
 
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email,
       password
     })
@@ -35,9 +35,9 @@ export default function SignupPage() {
   const darkThemeColors = ["#3A29FF", "#00A9FF", "#7A00FF"]
   const lightThemeColors = ["#3A29FF", "#FFA9FF", "#7A00FF"]
 
-  const [auroraColors, setAuroraColors] = useState([])
+  const [auroraColors, setAuroraColors] = useState<string[]>([])
 
-  const { theme, setTheme } = useTheme()
+  const { theme } = useTheme()
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -51,7 +51,7 @@ export default function SignupPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="absolute inset-0 z-0">
         <Aurora
-          colorStops={auroraColors}
+          colorStops={auroraColors as [string, string, string]}
           blend={0.4} // Softer blend
           amplitude={0.8} // Less aggressive amplitude
           speed={0.15} // Slower speed
@@ -89,7 +89,7 @@ export default function SignupPage() {
           </form>
           
           <p className="mt-4 text-center text-sm text-gray-600">
-            Already have an account? <a href="/login" className="text-blue-600 hover:underline">Log in</a>
+            Already have an account? <Link href="/login" className="text-blue-600 hover:underline">Log in</Link>
           </p>
         </CardContent>
       </Card>

@@ -1,10 +1,6 @@
-import OpenAI from "openai";
 
 const adjectives = ['Velvet', 'Nebulous', 'Iridescent', 'Twilight', 'Lush', 'Crystalline', 'Lunar', 'Electric'];
 const moods = ['haze', 'serenity', 'depth', 'pulse', 'rain', 'flame', 'mist', 'dawn'];
-
-const inspiration = `${adjectives[Math.floor(Math.random() * adjectives.length)]} ${moods[Math.floor(Math.random() * moods.length)]}`;
-
 
 const prompt = `
 Generate a 3 unique and creative theme presets for a link-in-bio website. Follow the technical and design requirements strictly.
@@ -50,7 +46,6 @@ DO NOT USE MARKDOWN OR BACKTICKS. ONLY RESPOND WITH THE ARRAY STRING
 
 // app/api/aithemes/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { error } from "console";
 
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
@@ -103,7 +98,7 @@ async function callOpenRouterAPI(prompt: string, apiKey: string) {
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function POST() {
 
   try {
     // Primary Key (B)
@@ -113,7 +108,7 @@ export async function POST(req: NextRequest) {
     );
     return NextResponse.json({ result: primaryResponse });
   } catch (primaryError) {
-    console.warn('Primary key (B) failed. Trying fallback A...');
+    console.warn('Primary key (B) failed. Trying fallback A...', primaryError);
 
     try {
       // Fallback Key A
@@ -123,7 +118,7 @@ export async function POST(req: NextRequest) {
       );
       return NextResponse.json({ result: fallbackAResponse });
     } catch (fallbackAError) {
-      console.warn('Fallback key (A) also failed. Trying fallback C...');
+      console.warn('Fallback key (A) also failed. Trying fallback C...' fallbackAError);
 
       try {
         // Fallback Key C

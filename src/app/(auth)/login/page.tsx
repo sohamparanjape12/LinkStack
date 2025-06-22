@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useRouter } from 'next/navigation'
 import { Aurora } from '@/components/aurora'
 import { useTheme } from 'next-themes'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -41,9 +42,9 @@ export default function LoginPage() {
   const darkThemeColors = ["#3A29FF", "#00A9FF", "#7A00FF"]
   const lightThemeColors = ["#3A29FF", "#FFA9FF", "#7A00FF"]
 
-  const [auroraColors, setAuroraColors] = useState([])
+  const [auroraColors, setAuroraColors] = useState<string[]>([])
 
-  const { theme, setTheme } = useTheme()
+  const { theme } = useTheme()
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -57,7 +58,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4 z-0">
       <div className="absolute inset-0 z-0">
         <Aurora
-          colorStops={auroraColors}
+          colorStops={auroraColors as [string, string, string]}
           blend={0.4} // Softer blend
           amplitude={0.8} // Less aggressive amplitude
           speed={0.15} // Slower speed
@@ -94,7 +95,7 @@ export default function LoginPage() {
           </form>
           
           <p className="mt-4 text-center text-sm text-gray-600">
-            Don't have an account? <a href="/signup" className="text-blue-600 hover:underline">Sign up</a>
+            Don&rsquo;t have an account? <Link href="/signup" className="text-blue-600 hover:underline">Sign up</Link>
           </p>
         </CardContent>
       </Card>

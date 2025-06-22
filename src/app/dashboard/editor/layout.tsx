@@ -1,6 +1,5 @@
 import { createServerClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
-import DashboardNav from '@/components/dashboard-nav'
 
 export default async function ProfileLayout({
   children,

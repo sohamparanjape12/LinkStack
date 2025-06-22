@@ -4,14 +4,13 @@ import { useState, useEffect } from 'react'
 import React from 'react'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { GripVertical, Plus, Edit, Trash2, ExternalLink, Save, PlusCircle, MinusCircle, Check, ImageIcon, Share2, Share, Copy, Sparkle, ArrowRight, Sparkles, ChevronsUpDown } from 'lucide-react'
+import { GripVertical, Edit, Trash2, ExternalLink, Save, PlusCircle, MinusCircle, Check, ImageIcon, Share, Copy, Sparkle, ArrowRight, Sparkles } from 'lucide-react'
 import { toast, Toaster } from 'sonner'
 import {
   Dialog,
@@ -23,7 +22,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { ThemeConfig } from '@/types/database'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { PopoverClose } from '@radix-ui/react-popover'
 import './styles.css'
@@ -36,13 +34,8 @@ import { socialIcons, IconName } from '@/config/icons';
 import { FONTS } from '@/config/fonts'
 import '../../globals.css'
 import ThemePresets from '@/components/ThemePresets'
-import { Interface } from 'readline'
-import { preloadFont } from 'next/dist/server/app-render/entry-base'
-import OpenAI from 'openai';
 import ThemePresetsCard from '@/components/ThemePresetsCard'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
-import { cn } from '@/lib/utils'
 import { useDashboardContext, Profile } from '@/contexts/DashboardContext' // Import context
 
 interface Link {
@@ -108,36 +101,11 @@ const TEXT_COLORS = [
   { name: 'Custom', value: 'custom' }
 ]
 
-// Add these constants after existing ones
-const LINK_STYLES = [
-  { name: 'Sharp', value: 'sharp' },
-  { name: 'Rounded', value: 'rounded' },
-  { name: 'Pill', value: 'pill' },
-] as const;
-
-const LINK_FILL = [
-  { name: 'Fill', value: 'fill' },
-  { name: 'Outline', value: 'outline' },
-  { name: 'Glass', value: 'glass' },
-] as const;
-
-const LINK_SHADOW = [
-  { name: 'None', value: 'none' },
-  { name: 'Subtle', value: 'subtle' },
-  { name: 'Hard', value: 'hard' },
-] as const;
-
 export default function ProfileCanvasEditor() {
   const { 
     user, // Supabase user object from context
     currentProfile, 
     setCurrentProfile, // This is the state setter for currentProfile from context
-    profiles, 
-    profileSwitcherOpen, 
-    setProfileSwitcherOpen, 
-    profileSwitcherValue, 
-    switchProfile, // Use this to change profile
-    isLoadingUserAndProfiles 
   } = useDashboardContext();
 
   const [links, setLinks] = useState<Link[]>([])
