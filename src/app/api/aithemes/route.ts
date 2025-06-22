@@ -118,7 +118,7 @@ export async function POST() {
       );
       return NextResponse.json({ result: fallbackAResponse });
     } catch (fallbackAError) {
-      console.warn('Fallback key (A) also failed. Trying fallback C...' fallbackAError);
+      console.warn('Fallback key (A) also failed. Trying fallback C...'. fallbackAError);
 
       try {
         // Fallback Key C
