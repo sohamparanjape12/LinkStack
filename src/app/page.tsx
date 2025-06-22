@@ -23,7 +23,7 @@ export default function Home() {
   const darkThemeColors = ["#3A29FF", "#00A9AA", "#7A00FF"]
   const lightThemeColors = ["#3A29FF", "#FFA9FF", "#7A00FF"]
 
-  const [auroraColors, setAuroraColors] = useState([])
+  const [auroraColors, setAuroraColors] = useState<string[]>([])
 
   const { theme, setTheme } = useTheme()
 
@@ -57,7 +57,7 @@ export default function Home() {
       <div className="relative">
         <div className={`absolute inset-0 ${width <= 480 ? '-top-50' : '-top-20'} z-0`}>
           <Aurora
-            colorStops={auroraColors}
+            colorStops={auroraColors as [string, string, string]}
             blend={0.5} // Softer blend
             amplitude={0.4} // Less aggressive amplitude
             speed={0.5} // Slower speed

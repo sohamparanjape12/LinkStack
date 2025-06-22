@@ -1,4 +1,4 @@
-import { createServerClient } from '@/lib/supabase-server';
+import { supabase } from '@/lib/supabase-client';
 import { notFound } from 'next/navigation';
 import PublicProfile from '@/components/public-profile';
 
@@ -18,8 +18,6 @@ export default async function ProfilePage({ params, searchParams }: Props) {
   // console.log('Params:', resolvedParams);
   // console.log('Search Params:', resolvedSearchParams);
 
-  const supabase = await createServerClient();
-
   // Fetch the user profile
   const { data: profile, error: profileError } = await supabase
     .from('profiles')
@@ -38,6 +36,7 @@ export default async function ProfilePage({ params, searchParams }: Props) {
     .from('links')
     .select('*')
     .eq('user_id', profile.id)
+    .eq('profile', profile.username)
     .eq('is_active', true)
     .order('position', { ascending: true });
 

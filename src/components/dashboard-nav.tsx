@@ -32,7 +32,6 @@ export default function DashboardNav() {
   const { theme, setTheme } = useTheme()
   const {
     user,
-    setUser,
     currentProfile,
     profiles,
     profileSwitcherOpen,

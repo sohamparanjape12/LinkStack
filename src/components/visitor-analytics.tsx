@@ -95,7 +95,7 @@ export function VisitorAnalytics({ visitorData }: Props) {
                   dataKey="total"
                   type="natural"
                   fill="url(#fillTotal)"
-                  radius={[4, 4, 0, 0]}
+                  radius={4}
                   className="fill-primary"
                 />
               </AreaChart>
@@ -148,7 +148,7 @@ export function VisitorAnalytics({ visitorData }: Props) {
                   dataKey="value"
                   type="natural"
                   fill="url(#fillTotal)"
-                  radius={[4, 4, 0, 0]}
+                  radius={4}
                   className="fill-primary"
                 />
               </AreaChart>
@@ -201,7 +201,7 @@ export function VisitorAnalytics({ visitorData }: Props) {
                   dataKey="value"
                   type="natural"
                   fill="url(#fillTotal)"
-                  radius={[4, 4, 0, 0]}
+                  radius={4}
                   className="fill-primary"
                 />
               </AreaChart>

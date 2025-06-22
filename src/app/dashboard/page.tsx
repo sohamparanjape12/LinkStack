@@ -21,6 +21,38 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { supabase } from '@/lib/supabase-client'
 import { useDashboardContext, Profile } from '@/contexts/DashboardContext' // Import context
 
+// Define types for our data structures to ensure type safety.
+interface LinkType {
+  id: string;
+  user_id: string;
+  profile: string;
+  title: string;
+  url: string;
+  icon: string | null;
+  is_active: boolean;
+  position: number;
+  created_at: string;
+}
+
+interface ClickType {
+  link_id: string;
+  created_at: string;
+}
+
+// A generic type for visitor data since we are selecting '*'
+interface VisitorType {
+  id: string;
+  user_id: string;
+  page_path: string;
+  referrer: string | null;
+  country: string | null;
+  city: string | null;
+  device: string | null;
+  browser: string | null;
+  os?: string | null;
+  created_at: string;
+}
+
 export default function DashboardPage() {
   const { 
     user, 
@@ -33,9 +65,9 @@ export default function DashboardPage() {
     isLoadingUserAndProfiles 
   } = useDashboardContext()
 
-  const [clickData, setClickData] = useState([])
-  const [visitorData, setVisitorData] = useState([])
-  const [links, setLinks] = useState([])
+  const [clickData, setClickData] = useState<ClickType[]>([])
+  const [visitorData, setVisitorData] = useState<VisitorType[]>([])
+  const [links, setLinks] = useState<LinkType[]>([])
   const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [loadingPageData, setLoadingPageData] = useState(true);
@@ -44,33 +76,33 @@ export default function DashboardPage() {
       async function getData(){
         if(user && currentProfile) {
           setLoadingPageData(true);
-          const { data: links } = await supabase
+          const { data: fetchedLinks } = await supabase
             .from('links')
             .select('*')
             .eq('user_id', user.id)
             .eq('profile', currentProfile?.username)
             .order('position', { ascending: true })
 
-          setLinks(links)
+          setLinks(fetchedLinks || [])
 
           // Get link clicks
-          const { data: clickData } = await supabase
+          const { data: fetchedClickData } = await supabase
             .from('link_clicks')
             .select('link_id, created_at')
             .eq('user_id', user.id)
             .eq('profile', currentProfile.username)
 
-          setClickData(clickData)
+          setClickData(fetchedClickData || [])
 
           // Get visitor analytics
-          const { data: visitorData } = await supabase
+          const { data: fetchedVisitorData } = await supabase
             .from('visitor_analytics')
             .select('*')
             .eq('user_id', user.id)
             .eq('page_path', '/' + currentProfile.username)
             .order('created_at', { ascending: false })
 
-          setVisitorData(visitorData)
+          setVisitorData(fetchedVisitorData || [])
           setLoadingPageData(false);
         } else {
           setLinks([]);
@@ -396,7 +428,16 @@ export default function DashboardPage() {
 
         {/* Add Visitor Analytics */}
         <div className="lg:col-span-full">
-          <VisitorAnalytics visitorData={visitorData || []} />
+          <VisitorAnalytics visitorData={
+            (visitorData || []).map(v => ({
+              ...v,
+              country: v.country ?? '',
+              os: v.os ?? '', // Provide a default value if os is missing
+              referrer: v.referrer ?? '', // Ensure referrer is string, not null
+              device: v.device ?? '',
+              browser: v.browser ?? ''
+            }))
+          } />
         </div>
       </div>
     </div>

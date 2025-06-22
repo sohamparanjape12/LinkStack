@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Button } from '@/components/ui/button';
 import { DialogTrigger } from './ui/dialog';
 
-interface ThemePreset {
+export interface ThemePreset {
   name: string
   backgroundColor: string
   textColor: string

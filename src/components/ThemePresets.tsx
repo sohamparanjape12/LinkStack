@@ -2,7 +2,9 @@ import React from 'react';
 import ThemePresetsCard from './ThemePresetsCard';
 import { Card, CardContent } from './ui/card';
 
-const themePresets = [
+import type { ThemePreset } from './ThemePresetsCard';
+
+const themePresets: ThemePreset[] = [
   {
     "name": "Ocean Depth",
     "backgroundColor": "linear-gradient(145deg, #001F3F 0%, #003366 100%)",
@@ -187,8 +189,8 @@ const themePresets = [
 
 
 
-interface ThemePresetsProps {
-  onApplyPreset: (preset: typeof themePresets[0]) => void;
+interface ThemePresetsProps {  
+  onApplyPreset: (preset: ThemePreset) => void;
 }
 
 const ThemePresets: React.FC<ThemePresetsProps> = ({ onApplyPreset }) => {

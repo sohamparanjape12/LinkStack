@@ -133,7 +133,7 @@ export async function POST() {
         return NextResponse.json(
           {
             error: 'All OpenRouter API keys failed. Please try again later.',
-            details: fallbackCError.message,
+            details: (fallbackCError instanceof Error ? fallbackCError.message : String(fallbackCError)),
           },
           { status: 500 }
         );

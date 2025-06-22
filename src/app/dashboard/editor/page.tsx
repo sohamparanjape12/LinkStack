@@ -1092,7 +1092,7 @@ const handleDragEnd = async (result: any) => {
                                         ...prev,
                                         theme_config: {
                                           ...prev.theme_config,
-                                          backgroundColor: e.target && e.target.value
+                                          backgroundColor: (e.target && (e.target as HTMLInputElement).value) || prev.theme_config.backgroundColor || '#111827'
                                         }
                                       } : null)
                                     }
@@ -1154,14 +1154,14 @@ const handleDragEnd = async (result: any) => {
                                   ...prev,
                                   theme_config: {
                                     ...prev.theme_config,
-                                    textColor: e.target && e.target.value
+                                    textColor: (e.target && (e.target as HTMLInputElement).value) || prev.theme_config.textColor || '#A9C7EA'
                                   }
                                 } : null)
                               }
                               input.click()
                             }
                             else{
-                              setCurrentProfile(prev => prev ? {...prev, theme_config: {...prev.theme_config, textColor: color.value}} : null)
+                              setCurrentProfile(prev => prev ? {...prev, theme_config: {...prev.theme_config, textColor: color.value || prev.theme_config.textColor || '#A9C7EA'}} : null)
                             }
                           }}
                           className={`w-full h-10 rounded-lg border-2 transition-all ${
@@ -1300,7 +1300,7 @@ const handleDragEnd = async (result: any) => {
                                       ...prev,
                                       theme_config: {
                                         ...prev.theme_config,
-                                        linkTextColor: e.target && e.target.value
+                                        linkTextColor: (e.target && (e.target as HTMLInputElement).value) || prev.theme_config.linkTextColor || '#A9C7EA'
                                       }
                                     } : null)
                                   }
@@ -1354,7 +1354,7 @@ const handleDragEnd = async (result: any) => {
                                     ...prev,
                                     theme_config: {
                                       ...prev.theme_config,
-                                      linkColor: e.target && e.target.value
+                                      linkColor: (e.target && (e.target as HTMLInputElement).value) || prev.theme_config.linkColor || '#111827'
                                     }
                                   } : null)
                                 }
