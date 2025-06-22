@@ -1,103 +1,193 @@
+"use client"
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  ExternalLink,
+  Layers,
+  Link2,
+  Palette,
+  Share2,
+  Sparkles,
+} from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Navbar } from "@/components/navbar";
+import { Aurora } from "@/components/aurora";
+import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const router = useRouter();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const darkThemeColors = ["#3A29FF", "#00A9AA", "#7A00FF"]
+  const lightThemeColors = ["#3A29FF", "#FFA9FF", "#7A00FF"]
+
+  const [auroraColors, setAuroraColors] = useState([])
+
+  const { theme, setTheme } = useTheme()
+
+  const useWidth = () => {
+  const [width, setWidth] = useState(0)
+  const handleResize = () => setWidth(window.innerWidth)
+  useEffect(() => {
+      handleResize()
+      window.addEventListener('resize', handleResize)
+      return () => window.removeEventListener('resize', handleResize)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  return width
+}
+
+  const width = useWidth()
+
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      setAuroraColors(darkThemeColors)
+    } else {
+      setAuroraColors(lightThemeColors)
+    }
+  }, [theme])
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      {/* Hero Section */}
+      <div className="relative">
+        <div className={`absolute inset-0 ${width <= 480 ? '-top-50' : '-top-20'} z-0`}>
+          <Aurora
+            colorStops={auroraColors}
+            blend={0.5} // Softer blend
+            amplitude={0.4} // Less aggressive amplitude
+            speed={0.5} // Slower speed
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+        <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32 z-10 lg:pb-0 lg:pt-40 pr-5">
+          <div className="max-w-3xl mx-auto text-center space-y-6 sm:space-y-8">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              Your Links, Your Style
+            </h1>
+            <p className="text-lg sm:text-xl text-muted-foreground px-4 sm:px-0">
+              Create a beautiful, customizable link landing page in minutes. Share
+              all your important links in one place.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 sm:px-0">
+              <Button size="lg" className="gap-2" onClick={() => router.push('/signup')}>
+                Get Started{" "}
+                <Sparkles className="h-4 w-4" />
+              </Button>
+              <Button size="lg" variant="outline" className="gap-2">
+                Learn More{" "}
+                <ExternalLink className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-35 py-16 sm:py-24 pt-0 pr-5">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-16">
+          Everything you need
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 pr-5">
+          <FeatureCard
+            icon={<Palette className="h-8 w-8" />}
+            title="Customizable Design"
+            description="Personalize your page with custom themes, colors, and styles that match your brand."
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+          <FeatureCard
+            icon={<Link2 className="h-8 w-8" />}
+            title="Unlimited Links"
+            description="Add as many links as you want. Organize and categorize them your way."
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
+          <FeatureCard
+            icon={<Share2 className="h-8 w-8" />}
+            title="Easy Sharing"
+            description="Share your profile with a single link. Perfect for social media bios."
           />
-          Go to nextjs.org →
-        </a>
+          <FeatureCard
+            icon={<Layers className="h-8 w-8" />}
+            title="Analytics"
+            description="Track clicks and understand your audience with detailed analytics."
+          />
+          <FeatureCard
+            icon={<Sparkles className="h-8 w-8" />}
+            title="Social Icons"
+            description="Choose from a wide variety of social media icons to enhance your links."
+          />
+          <FeatureCard
+            icon={<ExternalLink className="h-8 w-8" />}
+            title="Custom Domain"
+            description="Use your own domain name for a more professional appearance."
+          />
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="bg-primary/5 py-16 sm:py-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+            Ready to get started?
+          </h2>
+          <p className="text-lg sm:text-xl text-muted-foreground mb-8">
+            Create your LinkStack profile in minutes. No credit card required.
+          </p>
+          <Button size="lg" className="gap-2">
+            Create Your LinkStack{" "}
+            <Sparkles className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="border-t mt-auto">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
+            <p className="text-sm text-muted-foreground order-2 sm:order-1">
+              © 2024 LinkStack. All rights reserved.
+            </p>
+            <div className="flex gap-4 order-1 sm:order-2">
+              <a
+                href="#"
+                className="text-sm text-muted-foreground hover:text-primary"
+              >
+                Privacy Policy
+              </a>
+              <a
+                href="#"
+                className="text-sm text-muted-foreground hover:text-primary"
+              >
+                Terms of Service
+              </a>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
+  );
+}
+
+// Update the FeatureCard component to be more responsive
+function FeatureCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <Card className="group hover:border-primary/50 transition-colors h-full">
+      <CardContent className="pt-6 p-4 sm:p-6">
+        <div className="mb-4 text-primary">{icon}</div>
+        <h3 className="text-lg sm:text-xl font-semibold mb-2">{title}</h3>
+        <p className="text-sm sm:text-base text-muted-foreground">
+          {description}
+        </p>
+      </CardContent>
+    </Card>
   );
 }
