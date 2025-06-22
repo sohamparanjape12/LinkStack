@@ -4,6 +4,7 @@ import PublicProfile from '@/components/public-profile'
 
 interface Props {
   params: { username: string }
+  searchParams?: { [key: string]: string | string[] | undefined };
 }
 
 export default async function ProfilePage({ params }: Props) {
