@@ -27,7 +27,7 @@ import { toast } from 'sonner' // Import toast for notifications
 
 export default function DashboardNav() {
   const router = useRouter()
-  const [mounted, setMounted] = React.useState(false)
+  const [mounted, setMounted] = useState(false)
   const [logoutLoading, setLogoutLoading] = useState(false)
   const { theme, setTheme } = useTheme()
   const {
@@ -41,7 +41,7 @@ export default function DashboardNav() {
     isLoadingUserAndProfiles,
   } = useDashboardContext()
 
-  React.useEffect(() => {
+  useEffect(() => {
     setMounted(true)
   }, [])
 
@@ -223,12 +223,10 @@ export default function DashboardNav() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <Button 
-                  onClick={handleLogout} 
-                  variant="outline"
-                  className="w-full justify-start"
-                >
-                  Logout
+                <Button onClick={handleLogout} variant="outline" className='w-full justify-start'>
+                  {
+                    logoutLoading ? <div className='animate-spin rounded-full h-4 w-4 px-2 border-b-2 border-primary-900'></div> : 'Logout'
+                  }
                 </Button>
               </div>
             </SheetContent>
