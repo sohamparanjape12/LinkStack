@@ -73,7 +73,7 @@ export default function DashboardNav() {
 
   return (
     <nav className="border-b bg-background">
-      <div className="container mx-auto px-8 py-3 flex justify-between items-center">
+      <div className="container mx-auto px-4 lg:px-8 py-3 flex justify-between items-center">
         <div className='flex items-center gap-4'>
           <Link href="/" className="text-xl font-bold">
             LinkStack
@@ -84,7 +84,7 @@ export default function DashboardNav() {
                 variant="outline"
                 role="combobox"
                 aria-expanded={profileSwitcherOpen}
-                className="w-[200px] justify-between"
+                className="lg:w-[200px] justify-between"
               >
                 {currentProfile ? currentProfile.username : profileSwitcherValue
                   ? profiles.find((p) => p.username === profileSwitcherValue)?.username

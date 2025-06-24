@@ -16,6 +16,7 @@ import { Navbar } from "@/components/navbar";
 import { Aurora } from "@/components/aurora";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import { motion } from 'framer-motion';
 
 export default function Home() {
   const router = useRouter();
@@ -63,8 +64,8 @@ export default function Home() {
             speed={0.5} // Slower speed
           />
         </div>
-        <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32 z-10 lg:pb-0 lg:pt-40 pr-5">
-          <div className="max-w-3xl mx-auto text-center space-y-6 sm:space-y-8">
+        <div className="relative container mx-auto py-16 sm:py-24 lg:py-32 z-10 lg:pb-0 lg:pt-40">
+          <div className="max-w-3xl mx-auto text-center space-y-6 sm:space-y-8 lg:pr-5">
             <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               Your Links, Your Style
             </h1>
@@ -73,10 +74,17 @@ export default function Home() {
               all your important links in one place.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 sm:px-0">
-              <Button size="lg" className="gap-2" onClick={() => router.push('/signup')}>
-                Get Started{" "}
-                <Sparkles className="h-4 w-4" />
-              </Button>
+              <motion.div
+                initial={{filter: 'blur(2px)', scale: 0.6}}
+                whileInView={{filter: 'blur(0px)', scale: 1}}
+                viewport={{once: true, amount: 0.2}}
+                transition={{duration: 0.5, delay: 0.2, ease: "easeInOut"}}
+              >
+                <Button size="lg" className="gap-2" onClick={() => router.push('/signup')}>
+                  Get Started{" "}
+                  <Sparkles className="h-4 w-4" />
+                </Button>
+              </motion.div>
               <Button size="lg" variant="outline" className="gap-2">
                 Learn More{" "}
                 <ExternalLink className="h-4 w-4" />
@@ -87,11 +95,11 @@ export default function Home() {
       </div>
 
       {/* Features Section */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-35 py-16 sm:py-24 pt-0 pr-5">
+      <div className="container mx-auto py-16 sm:py-24 pt-0">
         <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-16">
           Everything you need
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 pr-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 px-5 lg:px-30">
           <FeatureCard
             icon={<Palette className="h-8 w-8" />}
             title="Customizable Design"
@@ -180,14 +188,21 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <Card className="group hover:border-primary/50 transition-colors h-full">
-      <CardContent className="pt-6 p-4 sm:p-6">
-        <div className="mb-4 text-primary">{icon}</div>
-        <h3 className="text-lg sm:text-xl font-semibold mb-2">{title}</h3>
-        <p className="text-sm sm:text-base text-muted-foreground">
-          {description}
-        </p>
-      </CardContent>
-    </Card>
+    <motion.div
+      initial={{y: 15, opacity: 0.2}}
+      whileInView={{y: 0, opacity: 1}}
+      viewport={{once: true, amount: 0.2}}
+      transition={{duration: 1.0, delay: 0.2, ease: "easeInOut"}}
+    >
+      <Card className="group hover:border-primary/50 transition-colors h-full">
+        <CardContent className="pt-6 p-4 sm:p-6">
+          <div className="mb-4 text-primary">{icon}</div>
+          <h3 className="text-lg sm:text-xl font-semibold mb-2">{title}</h3>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            {description}
+          </p>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }

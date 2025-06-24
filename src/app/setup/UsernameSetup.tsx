@@ -3,7 +3,7 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { supabase } from '../../lib/supabase-client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -57,7 +57,6 @@ export default function UsernameSetup() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const isNewProfile = searchParams.get('isNewProfile')
-  const supabase = createClientComponentClient()
 
   useEffect(() => {
     if(!isNewProfile)
@@ -360,8 +359,8 @@ export default function UsernameSetup() {
                     Username
                   </Label>
                   <div className="relative">
-                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500">
-                      {process.env.NEXT_PUBLIC_BASE_URL}/
+                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500 truncate w-22">
+                      {process.env.NEXT_PUBLIC_URL}/
                     </div>
                     <Input
                       id="username"

@@ -4,6 +4,7 @@ import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YA
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { format, parseISO } from "date-fns"
 import { useMemo } from "react"
+import { InteractiveAreaChart } from "./area-chart"
 
 interface ClickData {
   created_at: string
@@ -11,6 +12,22 @@ interface ClickData {
 interface AnalyticsChartProps {
   clickData: ClickData[]
 }
+
+const aggregateLCChartData = (visitorData: any[], label = "Clicks") => {
+    const byDate: Record<string, number> = {};
+
+    visitorData.forEach((item) => {
+      const date = format(new Date(item.created_at), 'yyyy-MM-dd');
+      byDate[date] = (byDate[date] || 0) + 1;
+    });
+
+    return Object.entries(byDate)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([date, count]) => ({
+        date,
+        [label]: count,
+      }));
+  };
 
 export function AnalyticsChart({ clickData }: AnalyticsChartProps) {
   const formattedData = useMemo(() => {
@@ -31,72 +48,14 @@ export function AnalyticsChart({ clickData }: AnalyticsChartProps) {
   }, [clickData]);
 
   return (
-    <Card className="flex-2 h-fit">
-      <CardHeader>
-        <CardTitle>All-Time Click Analytics</CardTitle>
-        <CardDescription>
-          Your all time link performance
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="pl-2">
-        {formattedData.length > 0 ? (
-          <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={formattedData}> {/* Changed from BarChart to AreaChart */}
-              <defs> {/* Added defs for gradient */}
-                <linearGradient id="fillTotal" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="var(--primary)" stopOpacity={0.1} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid vertical={false} strokeDasharray="3 3" /> 
-              {/* Added CartesianGrid */}
-              <XAxis
-                dataKey="name"
-                stroke="#888888"
-                fontSize={12}
-                tickLine={false}
-                axisLine={false}
-                tickFormatter={(value) => { // Added tickFormatter for date formatting
-                  const date = new Date(value);
-                  return date.toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                  });
-                }}
-              />
-              <YAxis
-                stroke="#888888"
-                fontSize={12}
-                tickLine={false}
-                axisLine={false}
-                tickFormatter={(value) => `${value}`}
-              />
-              <Tooltip
-                labelFormatter={(label) => { // Added labelFormatter for date formatting
-                  const date = new Date(label);
-                  return date.toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                  });
-                }}
-                contentStyle={{ color: '#000000', borderRadius: 10 }}
-              />
-              <Area
-                dataKey="total"
-                type="natural" // Smooth curves
-                fill="url(#fillTotal)" // Use the gradient
-                stroke="var(--primary)" // Line color
-                stackId="a" // For stacking, even if only one series
-                className="fill-primary" // Keep fill-primary class for consistency, though fill prop overrides
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        ) : (
-          <div className="flex items-center justify-center h-[300px] text-muted-foreground">
-            No click data available yet
-          </div>
-        )}
-      </CardContent>
-    </Card>
+    <InteractiveAreaChart
+      chartData={aggregateLCChartData(clickData)}
+      title="Click Analytics"
+      description="Click Data Over Time"
+      keys={[
+        { key: "Clicks", label: "Clicks", color: "#64748b" },
+      ]}
+      key={"CLicks"}
+    />
   )
 }

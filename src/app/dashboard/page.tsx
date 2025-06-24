@@ -56,12 +56,7 @@ interface VisitorType {
 export default function DashboardPage() {
   const { 
     user, 
-    currentProfile, 
-    profiles, 
-    profileSwitcherOpen, 
-    setProfileSwitcherOpen, 
-    profileSwitcherValue, 
-    switchProfile,
+    currentProfile,
     isLoadingUserAndProfiles 
   } = useDashboardContext()
 
@@ -112,7 +107,7 @@ export default function DashboardPage() {
         }
       }
       getData()
-  }, [user, currentProfile])
+  }, [currentProfile])
 
   const deleteLink = async (id: string) => {
     const { error } = await supabase
@@ -166,7 +161,7 @@ export default function DashboardPage() {
   }).length || 0
 
   
-  if (isLoadingUserAndProfiles || loadingPageData) {
+  if (loadingPageData) {
     return <div className="flex items-center justify-center min-h-screen w-full">
       <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary-900'></div>
     </div>;
@@ -177,7 +172,7 @@ export default function DashboardPage() {
   // If user is loaded, page data is not loading, but there's no current profile
   if (!currentProfile) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen w-full p-4 text-center">
+      <div className="flex flex-col items-center justify-center min-h-screen w-full text-center">
         <h2 className="text-xl font-semibold mb-2">No Profile Selected</h2>
         <p className="text-muted-foreground mb-4">
           Please create a new profile or select an existing one to view the dashboard.
@@ -188,8 +183,8 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-4 w-full md:space-y-6 p-4 md:p-6">
-      <div className="flex flex-col md:px-15 sm:flex-row justify-between items-start sm:items-center gap-2">
+    <div className="space-y-4 w-full md:space-y-6 mx-auto pt-5 md:pt-8 pb-4 sm:px-5">
+      <div className="flex flex-col md:px-15 sm:flex-row justify-between items-start px-4 sm:items-center gap-2">
         <div className='flex justify-center items-center gap-3'>
           <h1 className="text-2xl md:text-3xl font-bold">Dashboard</h1>
           <Link href={`/${currentProfile?.username}`}>
@@ -211,7 +206,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 md:px-20">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 md:px-20 px-5">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Clicks</CardTitle>
@@ -258,8 +253,9 @@ export default function DashboardPage() {
       </div>
 
       {/* Main Content Grid - New Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-7 xl:grid-cols-12 gap-4 md:px-20">
+      <div className="grid lg:grid-cols-2 grid-cols-1 xl:grid-cols-2 gap-4 mx-auto md:px-20 px-5">
         {/* Link Manager */}
+        {/*}
         <div className="lg:col-span-3 xl:col-span-4">
           <Card>
             <CardHeader>
@@ -335,72 +331,64 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         </div>
+        */}
 
         {/* Analytics Chart */}
-        <div className="lg:col-span-4 xl:col-span-5">
-          <Card className="h-full">
-            <CardHeader>
-              <CardTitle>Analytics</CardTitle>
-            </CardHeader>
-            <CardContent className="overflow-y-auto">
-              <AnalyticsChart clickData={clickData || []} />
-            </CardContent>
-          </Card>
+        <div className="lg:col-span-1 md:col-span-full xl:col-span-1 col-span-1">
+          <AnalyticsChart clickData={clickData || []} />
         </div>
 
         {/* Link Performance & Quick Stats */}
-        <div className="lg:col-span-3 xl:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-4 xl:gap-0">
+        <div className="lg:col-span-1 md:col-span-full xl:col-span-1 flex flex-col gap-4">
           {/* Link Performance Card */}
-          <div className="w-full md:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Link Performance</CardTitle>
-              </CardHeader>
-              <CardContent className="px-0">
-                <div className="max-h-[300px] overflow-y-auto w-full border-t border-b">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-[180px] min-w-[120px]">Link</TableHead>
-                        <TableHead className="w-[80px] text-right">Total</TableHead>
-                        <TableHead className="w-[80px] text-right">24h</TableHead>
-                        <TableHead className="w-[100px] text-right">Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {links?.map((link) => {
-                        const stats = getLinkStats(link.id)
-                        return (
-                          <TableRow key={link.id}>
-                            <TableCell className="font-medium truncate max-w-[150px]">
-                              <div className="flex items-center gap-2">
-                                {link.icon && (
-                                  <FontAwesomeIcon 
-                                    icon={socialIcons[link.icon as IconName]} 
-                                    className="h-4 w-4 flex-shrink-0" 
-                                  />
-                                )}
-                                <span className="truncate">{link.title}</span>
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-right">{stats.total}</TableCell>
-                            <TableCell className="text-right">{stats.last24h}</TableCell>
-                            <TableCell className="text-right">
-                              <span className={`px-2 py-1 rounded-full text-xs whitespace-nowrap ${
-                                link.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                              }`}>
-                                {link.is_active ? 'Active' : 'Inactive'}
-                              </span>
-                            </TableCell>
-                          </TableRow>
-                        )
-                      })}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <Card className='flex-1'>
+            <CardHeader>
+              <CardTitle>Link Performance</CardTitle>
+            </CardHeader>
+            <CardContent className="px-0 flex-1 w-full">
+              <div className="max-h-[300px] overflow-y-auto w-full border-t border-b">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[180px] min-w-[120px]">Link</TableHead>
+                      <TableHead className="w-[80px] text-right">Total</TableHead>
+                      <TableHead className="w-[80px] text-right">24h</TableHead>
+                      <TableHead className="w-[100px] text-right">Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {links?.map((link) => {
+                      const stats = getLinkStats(link.id)
+                      return (
+                        <TableRow key={link.id}>
+                          <TableCell className="font-medium truncate max-w-[150px]">
+                            <div className="flex items-center gap-2">
+                              {link.icon && (
+                                <FontAwesomeIcon 
+                                  icon={socialIcons[link.icon as IconName]} 
+                                  className="h-4 w-4 flex-shrink-0" 
+                                />
+                              )}
+                              <span className="truncate">{link.title}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right">{stats.total}</TableCell>
+                          <TableCell className="text-right">{stats.last24h}</TableCell>
+                          <TableCell className="text-right">
+                            <span className={`px-2 py-1 rounded-full text-xs whitespace-nowrap ${
+                              link.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                            }`}>
+                              {link.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Quick Stats Card */}
           <div className="w-full md:col-span-2">
@@ -427,18 +415,16 @@ export default function DashboardPage() {
         </div>
 
         {/* Add Visitor Analytics */}
-        <div className="lg:col-span-full">
-          <VisitorAnalytics visitorData={
-            (visitorData || []).map(v => ({
-              ...v,
-              country: v.country ?? '',
-              os: v.os ?? '', // Provide a default value if os is missing
-              referrer: v.referrer ?? '', // Ensure referrer is string, not null
-              device: v.device ?? '',
-              browser: v.browser ?? ''
-            }))
-          } />
-        </div>
+        <VisitorAnalytics visitorData={
+          (visitorData || []).map(v => ({
+            ...v,
+            country: v.country ?? '',
+            os: v.os ?? '', // Provide a default value if os is missing
+            referrer: v.referrer ?? '', // Ensure referrer is string, not null
+            device: v.device ?? '',
+            browser: v.browser ?? ''
+          }))
+        } />
       </div>
     </div>
   )

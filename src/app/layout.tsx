@@ -89,7 +89,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className="h-full overflow-y-scroll">
+    <html lang="en" suppressHydrationWarning className="h-full">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} ${openSans.variable} ${lato.variable} ${montserrat.variable} ${poppins.variable} ${raleway.variable} ${inter.variable} ${playfair.variable} ${merriweather.variable} ${ubuntu.variable} ${rubik.variable} antialiased min-h-screen bg-background font-sans antialiased m-0 p-0`}
       >

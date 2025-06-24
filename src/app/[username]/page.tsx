@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase-client';
+import { createServerClient } from '@/lib/supabase-server';
 import { notFound } from 'next/navigation';
 import PublicProfile from '@/components/public-profile';
 
@@ -13,10 +13,14 @@ export default async function ProfilePage({ params, searchParams }: Props) {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
 
+  console.log('Resolved Params:', resolvedParams);
+
   // It's good practice to log or inspect params and searchParams here
   // during development to ensure they are what you expect.
   // console.log('Params:', resolvedParams);
   // console.log('Search Params:', resolvedSearchParams);
+  
+  const supabase = await createServerClient();
 
   // Fetch the user profile
   const { data: profile, error: profileError } = await supabase
@@ -25,6 +29,8 @@ export default async function ProfilePage({ params, searchParams }: Props) {
     .eq('username', resolvedParams.username)
     .order('created_at', { ascending: false })
     .single();
+
+    console.log(profile)
 
   if (profileError || !profile) {
     // console.error('Error fetching profile:', profileError); // Log error for debugging
@@ -35,13 +41,15 @@ export default async function ProfilePage({ params, searchParams }: Props) {
   const { data: links, error: linksError } = await supabase
     .from('links')
     .select('*')
-    .eq('user_id', profile.id)
-    .eq('profile', profile.username)
+    .eq('user_id', profile?.id)
+    .eq('profile', profile?.username)
     .eq('is_active', true)
     .order('position', { ascending: true });
 
+console.log('Links:', links);
+
   if (linksError) {
-    // console.error('Error fetching links:', linksError); // Log error for debugging
+    console.error('Error fetching links:', linksError); // Log error for debugging
     // Depending on your app, you might want to show an error state or an empty links array
     // rather than calling notFound if only links fail. For now, we'll proceed.
   }

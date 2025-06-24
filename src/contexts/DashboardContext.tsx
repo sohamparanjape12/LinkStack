@@ -46,32 +46,25 @@ export const DashboardProvider = ({ children, initialUser, initialProfiles }: Da
   const [isLoadingUserAndProfiles, setIsLoadingUserAndProfiles] = useState(true);
 
   useEffect(() => {
-    console.log('DashboardContext: Initializing with initialUser, initialProfiles', { initialUser, initialProfiles });
     setUser(initialUser);
     setProfiles(initialProfiles);
     if (initialProfiles && initialProfiles.length > 0) {
       // Try to set currentProfile from localStorage or default to first profile
       const storedProfileUsername = localStorage.getItem('selectedProfileUsername');
-      console.log('DashboardContext: storedProfileUsername from localStorage:', storedProfileUsername);
       const foundProfile = initialProfiles.find(p => p.username === storedProfileUsername);
-      console.log('DashboardContext: foundProfile based on localStorage and initialProfiles:', foundProfile);
       const profileToSet = foundProfile || initialProfiles[0];
-      console.log('DashboardContext: profileToSet for initial load:', profileToSet);
 
       setCurrentProfile(profileToSet);
       setProfileSwitcherValue(profileToSet.username);
     } else if (initialUser && initialProfiles.length === 0) {
-      console.log('DashboardContext: User exists but no profiles.');
       // User exists but has no profiles, might need to go to setup or handle this case
       setCurrentProfile(null);
       // Potentially redirect to setup if no profiles and not on setup page
       if (!pathname.startsWith('/setup') && initialUser) {
-        console.log('DashboardContext: Considering redirect to /setup due to no profiles.');
         // router.push('/setup'); // Be cautious with automatic redirects here to avoid loops
       }
     }
     setIsLoadingUserAndProfiles(false);
-    console.log('DashboardContext: isLoadingUserAndProfiles set to false (initial load).');
   }, [initialUser, initialProfiles, pathname, router]); // Added pathname, router for consistency if redirect logic is used
 
   // Effect to listen for auth changes
@@ -130,16 +123,12 @@ export const DashboardProvider = ({ children, initialUser, initialProfiles }: Da
       // Potentially refresh data or navigate if needed, e.g. router.refresh() or specific navigation
       // For now, we assume pages will react to currentProfile change
       // If on dashboard, refresh to reload data for the new profile
-      if (pathname.startsWith('/dashboard')) {
-        router.refresh(); 
-      }
     }
   }, [profiles, router, pathname]);
 
 
   const value = {
     user,
-    setUser,
     currentProfile,
     setCurrentProfile, // Keep this if direct manipulation is needed, though switchProfile is preferred
     profiles,

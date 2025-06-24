@@ -179,8 +179,6 @@ export default function ProfileCanvasEditor() {
         .eq('profile', currentProfile.username) 
         .order('position', { ascending: true })
 
-      console.log('Links data:', linksData)
-
       if (linksError) throw linksError
       setAllProfileLinks(linksData || []); // Store all links
       const activeLinks = linksData?.filter(link => link.is_active) || []
@@ -199,13 +197,10 @@ export default function ProfileCanvasEditor() {
 const handleDragEnd = async (result: any) => {
   const { source, destination, draggableId } = result
   
-  console.log('Drag result:', { source, destination, draggableId }) // Debug log
-  
   if (!destination) return
 
   // Handle drag from canvas to available links (REMOVE from canvas)
   if (source.droppableId === 'links' && destination.droppableId === 'available-links') {
-    console.log('Moving from canvas to available') // Debug log
     
     const draggedLink = canvasLinks[source.index]
     if (!draggedLink) return
@@ -335,8 +330,7 @@ const handleDragEnd = async (result: any) => {
 
   const saveProfile = async () => {
     if (!currentProfile || !user) return
-    
-    console.log('SaveProfile: Setting saving to true');
+
     setSaving(true)
     let success = false; // Flag to track if core operations succeeded
     try {
@@ -344,7 +338,6 @@ const handleDragEnd = async (result: any) => {
 
       // Upload new image if one is selected
       if (backgroundImage) {
-        console.log('SaveProfile: Handling background image upload');
         // Validate file size (max 2MB)
         if (backgroundImage.size > 2 * 1024 * 1024) {
           throw new Error('Image size must be less than 2MB')
@@ -411,7 +404,6 @@ const handleDragEnd = async (result: any) => {
           .from('backgrounds')
           .getPublicUrl(filePath)
         backgroundImageUrl = publicUrl
-        console.log('SaveProfile: Background image uploaded', backgroundImageUrl);
       }
 
       // Update profile
@@ -433,11 +425,9 @@ const handleDragEnd = async (result: any) => {
         console.error('SaveProfile: Profile update error:', error);
         throw error;
       }
-      console.log('SaveProfile: Profile updated in DB successfully');
     
       // Update local state
       setCurrentProfile(prevProfile => {
-        console.log('SaveProfile: Updating local currentProfile state');
         return prevProfile ? {
           ...prevProfile,
           theme_config: {
@@ -454,22 +444,18 @@ const handleDragEnd = async (result: any) => {
       console.error('SaveProfile: Catch block error:', error)
       toast.error(error instanceof Error ? error.message : 'Failed to save profile')
       // Ensure saving is false on error, before any refresh attempt
-      console.log('SaveProfile: Setting saving to false (in catch block)');
       setSaving(false);
     }
 
     // Only refresh if the core save operations were successful
     if (success) {
-      console.log('SaveProfile: Setting saving to false (before refresh)');
       setSaving(false); // Update UI first to remove "Saving..."
 
       // Allow React to process state update and re-render before router.refresh()
       await new Promise(resolve => setTimeout(resolve, 0)); 
 
-      console.log('SaveProfile: Starting router.refresh()');
       // Refresh the route to ensure the layout and context re-fetch the latest profile data
       router.refresh();
-      console.log('SaveProfile: router.refresh() initiated');
     }
   }
 
@@ -712,7 +698,6 @@ const handleDragEnd = async (result: any) => {
       });
 
       const data = await res.json();
-      console.log(data)
 
       if (Array.isArray(data.result) && data.result.length > 0) {
         // Pick one of the returned themes, e.g., randomly:
@@ -733,7 +718,7 @@ const handleDragEnd = async (result: any) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="flex items-center justify-center min-h-screen w-full">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-900"></div>
       </div>
     )
@@ -1532,12 +1517,12 @@ const handleDragEnd = async (result: any) => {
                       !aiThemeError ? 
                           aiThemeLoading ? (
                             <div className='w-full flex flex-col items-center justify-center px-5'>
-                              <div className='flex gap-4'>
+                              <div className='flex gap-4 sm:flex-col'>
                                 {
                                   Array.from({length: 3}).map((_, i) => (
                                       <div className='flex flex-col gap-1 items-center justify-center'>
                                         <Skeleton className='h-[260px] w-[190px] rounded-lg' />
-                                        <Skeleton className='h-[15px] w-[150px] rounded-sm mt-2 mb-6' />
+                                        <Skeleton className='h-[15px] w-[150px] rounded-sm mt-1 mb-6' />
                                       </div>
                                   ))
                                 }
@@ -1611,7 +1596,7 @@ const handleDragEnd = async (result: any) => {
                 <Share className="h-4 w-4" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className={!isPreviewMode ? "w-80 mr-2 mt-1" : "w-80 ml-2 mt-1"}>
+            <PopoverContent className={!isPreviewMode ? "w-100 mr-2 mt-1" : "w-85 ml-2 mt-1"}>
               <div className="flex flex-col gap-2">
                 <p className="text-sm text-muted-foreground">
                   Share your profile with others using this link:
@@ -1619,7 +1604,7 @@ const handleDragEnd = async (result: any) => {
                 <div className='flex flex-row items-center justify-between p-2 px-0 pt-0 gap-2'>
                   <Input
                     readOnly
-                    value={`${process.env.NEXT_PUBLIC_BASE_URL}/@${currentProfile.username}`}
+                    value={`${process.env.NEXT_PUBLIC_URL}/${currentProfile.username}`}
                     className="cursor-pointer"
                     onClick={(e) => {
                       (e.target as HTMLInputElement).select();

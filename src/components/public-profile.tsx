@@ -36,37 +36,52 @@ export default function PublicProfile({ profile, links }: Props) {
     return '#' + color.replace(/^#/, '').replace(/../g, color => ('0'+Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2));
   }
 
+  const fetchUser = async () => {
+    const { data } = await supabase.auth.getUser();
+    setCurrentUser(data?.user || null);
+  };
+
   useEffect(() => {
-    const fetchUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setCurrentUser(data?.user || null);
-    };
+  const runTracking = async () => {
+    const { data: userData } = await supabase.auth.getUser();
+    setCurrentUser(userData?.user || null);
 
-    const trackVisit = async () => {
-      if (!profile) return
-      
-      const ua = window.navigator.userAgent
-      const device = /mobile/i.test(ua) ? 'Mobile' : 'Desktop'
-      const browser = getBrowser(ua)
-      const os = getOS(ua)
+    // Check if a visitor row already exists
+    const { data: visitorData, error } = await supabase.from('visitor_analytics')
+      .select('*')
+      .eq('user_id', profile.id)
+      .eq('page_path', window.location.pathname)
+      .eq('visited_by', userData?.user?.id)
 
-      await supabase.from('visitor_analytics').insert({
+    if (visitorData && visitorData.length > 0) {
+      // Already recorded
+      return;
+    }else if ((!userData?.user?.id || profile.id !== userData.user.id) || (currentUser === null)) {
+      const ua = window.navigator.userAgent;
+      const device = /mobile/i.test(ua) ? 'Mobile' : 'Desktop';
+      const browser = getBrowser(ua);
+      const os = getOS(ua);
+
+      const { error: insertError } = await supabase.from('visitor_analytics').insert({
         user_id: profile.id,
         page_path: window.location.pathname,
         referrer: document.referrer,
         browser,
         os,
         device,
-      })
+        visited_by: userData.user ? userData.user.id : null
+      });
+
+      if (insertError) {
+        console.error('Error inserting visitor data:', insertError);
+      }
     }
+  };
 
-    fetchUser();
-    
-    if(currentUser !== undefined)
-      if(!currentUser || profile.id !== currentUser.id)
-        trackVisit()
+  runTracking();
+  // Don't include `currentUser` in deps — it's handled inside
+}, [profile]);
 
-  }, [profile, currentUser]);
 
   const hexToRgb = (hex: string) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);

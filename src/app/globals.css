@@ -147,25 +147,7 @@ html, body {
 }
 
 /* globals.css */
-html {
-  scrollbar-gutter: stable;
-}
-
-/* globals.css */
 body {
   padding-left: calc(100vw - 100%);
   padding-left: 0; /* Reset for browsers that don't support calc */
-}
-
-/* Or use this more reliable method */
-@supports (scrollbar-gutter: stable) {
-  html {
-    scrollbar-gutter: stable;
-  }
-}
-
-@supports not (scrollbar-gutter: stable) {
-  html {
-    overflow-y: scroll;
-  }
 }
