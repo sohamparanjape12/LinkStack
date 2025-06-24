@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Aurora } from '@/components/aurora'
 import { useTheme } from 'next-themes'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 
 export default function SignupPage() {
   const [email, setEmail] = useState('')
@@ -25,9 +26,13 @@ export default function SignupPage() {
     })
 
     if (error) {
+      console.log(error)
       setMessage(`Error: ${error.message}`)
     } else {
       setMessage('Check your email for verification link!')
+      setTimeout(() => {
+        redirect('/login')
+      }, 3000);
     }
     setLoading(false)
   }

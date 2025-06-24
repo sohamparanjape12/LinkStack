@@ -75,17 +75,18 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4 sm:px-0">
               <motion.div
+                className="w-full sm:w-fit"
                 initial={{filter: 'blur(2px)', scale: 0.6}}
                 whileInView={{filter: 'blur(0px)', scale: 1}}
                 viewport={{once: true, amount: 0.2}}
                 transition={{duration: 0.5, delay: 0.2, ease: "easeInOut"}}
               >
-                <Button size="lg" className="gap-2" onClick={() => router.push('/signup')}>
+                <Button size="lg" className="gap-2 w-full" onClick={() => router.push('/signup')}>
                   Get Started{" "}
                   <Sparkles className="h-4 w-4" />
                 </Button>
               </motion.div>
-              <Button size="lg" variant="outline" className="gap-2">
+              <Button size="lg" variant="outline" className="gap-2 w-full sm:w-fit">
                 Learn More{" "}
                 <ExternalLink className="h-4 w-4" />
               </Button>
@@ -192,7 +193,7 @@ function FeatureCard({
       initial={{y: 15, opacity: 0.2}}
       whileInView={{y: 0, opacity: 1}}
       viewport={{once: true, amount: 0.2}}
-      transition={{duration: 1.0, delay: 0.2, ease: "easeInOut"}}
+      transition={{duration: 0.6, delay: 0.1, ease: "easeInOut"}}
     >
       <Card className="group hover:border-primary/50 transition-colors h-full">
         <CardContent className="pt-6 p-4 sm:p-6">

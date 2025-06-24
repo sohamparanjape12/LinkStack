@@ -188,9 +188,14 @@ export function Navbar() {
                   </Link>
                   {
                     user !== null ? (
-                      <Link href="/dashboard" onClick={() => setIsOpen(false)}>
-                        Dashboard
-                      </Link>
+                      <>
+                        <Link href="/dashboard" onClick={() => setIsOpen(false)}>
+                          Dashboard
+                        </Link>
+                        <Button className="w-full mt-3" variant={'destructive'} onClick={handleLogout}>
+                          Logout
+                        </Button>
+                      </>
                     ) : (
                         <>
                       <Link href="/login" onClick={() => setIsOpen(false)}>

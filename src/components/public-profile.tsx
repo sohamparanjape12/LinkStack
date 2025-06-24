@@ -174,7 +174,7 @@ export default function PublicProfile({ profile, links }: Props) {
                 rel="noopener noreferrer"
                 className="block w-full group" 
                 onClick={() => {
-                      if(currentUser?.id !== link.user_id) {
+                      if((currentUser?.id !== link.user_id) || (currentUser === null)) {
                         handleLinkClick(link.id, profile.id);
                       }
                     }
