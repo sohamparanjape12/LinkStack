@@ -1508,16 +1508,16 @@ const handleDragEnd = async (result: any) => {
                       AI Theme
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className='min-w-fit min-h-[70vh]'>
-                    <DialogHeader>
+                  <DialogContent className='min-w-fit min-h-[70vh] flex flex-col'>
+                    <DialogHeader className='mb-0 pb-0'>
                       <DialogTitle>AI Theme</DialogTitle>
                     </DialogHeader>
                     
                     {
                       !aiThemeError ? 
                           aiThemeLoading ? (
-                            <div className='w-full flex flex-col items-center justify-center px-5'>
-                              <div className='flex gap-4 sm:flex-col'>
+                            <div className='w-full flex flex-col items-center justify-center px-5 flex-1'>
+                              <div className='flex gap-4 flex-col md:flex-row overflow-y-auto h-[70vh]'>
                                 {
                                   Array.from({length: 3}).map((_, i) => (
                                       <div className='flex flex-col gap-1 items-center justify-center'>
@@ -1533,8 +1533,8 @@ const handleDragEnd = async (result: any) => {
                               </Button>
                             </div>
                           ) : (
-                            <div className='w-full flex flex-col items-center justify-center px-5'>
-                              <div className='flex'>
+                            <div className='w-full flex flex-col items-center justify-center px-5 flex-1'>
+                              <div className='flex flex-col md:flex-row gap-2 overflow-y-auto h-[70vh]'>
                                 {
                                   aiThemes !== null && aiThemes.map((theme) => (
                                     <ThemePresetsCard preset={theme} isAITheme={true} onApply={() => {
